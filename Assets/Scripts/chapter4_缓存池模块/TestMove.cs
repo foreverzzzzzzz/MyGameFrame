@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Main : MonoBehaviour
+public class TestMove : MonoBehaviour
 {
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -14,10 +13,6 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject obj =  PoolMgr.Instance.GetObj("Test/Cube");
-            obj.transform.position = Vector3.zero;
-        }
+        this.transform.Translate(10 * Time.deltaTime * Vector3.forward);
     }
 }
