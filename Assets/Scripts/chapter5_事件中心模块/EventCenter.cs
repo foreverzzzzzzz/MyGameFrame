@@ -8,18 +8,20 @@ public class EventCenter : BaseManager<EventCenter>
     private EventCenter(){}
     
     //用于记录对应事件 关联的 对应的逻辑
-    private Dictionary<string, UnityAction> eventDic = new Dictionary<string, UnityAction>();
+    //object包含 .NET 的所有类型（int, string, List, 自定义类等）
+    //Object只包含 Unity 引擎内的资源类型（GameObject, Material, Texture等，不包含 int, string 等普通 C# 类型）
+    private Dictionary<string, UnityAction<object>> eventDic = new Dictionary<string, UnityAction<object>>();
 
     /// <summary>
     /// 触发事件 
     /// </summary>
     /// <param name="eventName">事件名字</param>
-    public void EventTrigger(string eventName)
+    public void EventTrigger(string eventName,object info = null)
     {
         //有事件相应逻辑 才会触发
         if (eventDic.ContainsKey(eventName))
         {
-            eventDic[eventName]?.Invoke();
+            eventDic[eventName]?.Invoke(info);
         }
     }
 
@@ -28,7 +30,7 @@ public class EventCenter : BaseManager<EventCenter>
     /// </summary>
     /// <param name="eventName"></param>
     /// <param name="func"></param>
-    public void AddEventListener(string eventName, UnityAction func)
+    public void AddEventListener(string eventName, UnityAction<object> func)
     {
         if (eventDic.ContainsKey(eventName))
             eventDic[eventName] += func;
@@ -43,7 +45,7 @@ public class EventCenter : BaseManager<EventCenter>
     /// </summary>
     /// <param name="eventName"></param>
     /// <param name="func"></param>
-    public void RemoveEventListener(string eventName, UnityAction func)
+    public void RemoveEventListener(string eventName, UnityAction<object> func)
     {
         if (eventDic.ContainsKey(eventName))
             eventDic[eventName] -= func;
