@@ -42,13 +42,13 @@ public class EventCenter : BaseManager<EventCenter>
     //用于记录对应事件 关联的 对应的逻辑
     //object包含 .NET 的所有类型（int, string, List, 自定义类等）
     //Object只包含 Unity 引擎内的资源类型（GameObject, Material, Texture等，不包含 int, string 等普通 C# 类型）
-    private Dictionary<string, EventInfoBase> eventDic = new Dictionary<string, EventInfoBase>();
+    private Dictionary<E_EventType, EventInfoBase> eventDic = new Dictionary<E_EventType, EventInfoBase>();
 
     /// <summary>
     /// 触发事件 
     /// </summary>
     /// <param name="eventName">事件名字</param>
-    public void EventTrigger<T>(string eventName,T info)
+    public void EventTrigger<T>(E_EventType eventName,T info)
     {
         //有事件相应逻辑 才会触发
         if (eventDic.ContainsKey(eventName))
@@ -59,7 +59,7 @@ public class EventCenter : BaseManager<EventCenter>
     }
     
     //触发无参无返回值委托
-    public void EventTrigger(string eventName)
+    public void EventTrigger(E_EventType eventName)
     {
         //有事件相应逻辑 才会触发
         if (eventDic.ContainsKey(eventName))
@@ -73,7 +73,7 @@ public class EventCenter : BaseManager<EventCenter>
     /// </summary>
     /// <param name="eventName"></param>
     /// <param name="func"></param>
-    public void AddEventListener<T>(string eventName, UnityAction<T> func)
+    public void AddEventListener<T>(E_EventType eventName, UnityAction<T> func)
     {
         if (eventDic.ContainsKey(eventName))
         {
@@ -85,7 +85,7 @@ public class EventCenter : BaseManager<EventCenter>
         }
     }   
     
-    public void AddEventListener(string eventName, UnityAction func)
+    public void AddEventListener(E_EventType eventName, UnityAction func)
     {
         if (eventDic.ContainsKey(eventName))
         {
@@ -102,13 +102,13 @@ public class EventCenter : BaseManager<EventCenter>
     /// </summary>
     /// <param name="eventName"></param>
     /// <param name="func"></param>
-    public void RemoveEventListener<T>(string eventName, UnityAction<T> func)
+    public void RemoveEventListener<T>(E_EventType eventName, UnityAction<T> func)
     {
         if (eventDic.ContainsKey(eventName))
             (eventDic[eventName] as EventInfo<T>).actions -= func;
     }
     
-    public void RemoveEventListener(string eventName, UnityAction func)
+    public void RemoveEventListener(E_EventType eventName, UnityAction func)
     {
         if (eventDic.ContainsKey(eventName))
             (eventDic[eventName] as EventInfo).actions -= func;
@@ -121,7 +121,7 @@ public class EventCenter : BaseManager<EventCenter>
     }
 
     //清除某一个事件监听
-    public void Clear(string eventName)
+    public void Clear(E_EventType eventName)
     {
         if (eventDic.ContainsKey(eventName))
         {
