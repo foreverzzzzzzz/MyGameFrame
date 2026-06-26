@@ -8,16 +8,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        print(UIMgr.Instance.GetLayerFather(E_UILayer.Bottom).name);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject obj =  PoolMgr.Instance.GetObj("Test/Cube");
-            obj.transform.position = Vector3.zero;
-        }
-    }
 }
