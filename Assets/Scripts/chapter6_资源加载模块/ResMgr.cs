@@ -21,6 +21,8 @@ public class ResInfo<T> : ResInfoBase
     public UnityAction<T> callBack;
     //用于存储异步加载时 开启的协同程序
     public Coroutine coroutine;
+    //是否需要移除
+    public bool isDel;
 }
 
 public class ResMgr : BaseManager<ResMgr>
@@ -39,7 +41,46 @@ public class ResMgr : BaseManager<ResMgr>
     /// 指定为UnityEngine的Object而不是System的，后面同理
     public T Load<T>(string path) where T : UnityEngine.Object
     {
-        return Resources.Load<T>(path);
+        string resName = path + "_" + typeof(T).Name;
+        ResInfo<T> info;
+        //字典中不存在资源时
+        if (!resDic.ContainsKey(resName))
+        {
+            //直接同步加载 并且记录资源信息 到字典中 方便下次直接取出来用
+            T res = Resources.Load<T>(path);
+            info = new ResInfo<T>();
+            info.asset = res;
+            resDic.Add(resName, info);
+            return res;
+        }
+        else
+        {
+            //取出字典中的记录
+            info = resDic[resName] as ResInfo<T>;
+            //存在异步加载 还在加载中
+            if(info.asset == null)
+            {
+                //停止异步加载 
+                MonoMgr.Instance.StopCoroutine(info.coroutine);
+                //直接采用同步的方式加载成功
+                T res = Resources.Load<T>(path);
+                //记录 
+                info.asset = res;
+                //还应该把那些等待着异步加载结束的委托去执行了
+                info.callBack?.Invoke(res);
+                //回调结束 异步加载也停了 所以清除无用的引用
+                info.callBack = null;
+                info.coroutine = null;
+                // 并使用
+                return res;
+            }
+            else
+            {
+                //如果已经加载结束 直接用
+                return info.asset;
+            }
+        }
+
     }
     
     /// <summary>
@@ -96,10 +137,18 @@ public class ResMgr : BaseManager<ResMgr>
             resInfo.asset = rq.asset as T;
             //将加载完成的资源传递出去 将存入的callBack一起调用
             //资源加载结束 将资源传到外部的委托函数去进行使用 真正的资源存储在rq.asset中
-            resInfo.callBack?.Invoke(resInfo.asset);
-            //加载完毕后 这些引用就可以清空 避免引用的占用 可能带来的潜在的内存泄漏问题
-            resInfo.callBack = null;
-            resInfo.coroutine = null;
+            //如果发现需要删除 再去移除资源
+            if (resInfo.isDel)
+                UnloadAsset<T>(path);
+            else
+            {
+                //将加载完成的资源传递出去
+                resInfo.callBack?.Invoke(resInfo.asset);
+                //加载完毕后 这些引用就可以清空 避免引用的占用 可能带来的潜在的内存泄漏问题
+                resInfo.callBack = null;
+                resInfo.coroutine = null;
+            }
+
         }
 
     }
@@ -153,11 +202,18 @@ public class ResMgr : BaseManager<ResMgr>
             ResInfo<UnityEngine.Object> resInfo = resDic[resName] as ResInfo<UnityEngine.Object>;
             //取出资源信息 并且记录加载完成的资源
             resInfo.asset = rq.asset;
-            //将加载完成的资源传递出去
-            resInfo.callBack?.Invoke(resInfo.asset);
-            //加载完毕后 这些引用就可以清空 避免引用的占用 可能带来的潜在的内存泄漏问题
-            resInfo.callBack = null;
-            resInfo.coroutine = null;
+            //如果发现需要删除 再去移除资源
+            if (resInfo.isDel)
+                UnloadAsset(path, type);
+            else
+            {
+                //将加载完成的资源传递出去
+                resInfo.callBack?.Invoke(resInfo.asset);
+                //加载完毕后 这些引用就可以清空 避免引用的占用 可能带来的潜在的内存泄漏问题
+                resInfo.callBack = null;
+                resInfo.coroutine = null;
+            }
+
         }
     }
 
@@ -166,9 +222,57 @@ public class ResMgr : BaseManager<ResMgr>
     /// 指定卸载一个资源
     /// </summary>
     /// <param name="assetToUnload"></param>
-    public void UnloadAsset(UnityEngine.Object assetToUnload)
+    public void UnloadAsset<T>(string path)
     {
-        Resources.UnloadAsset(assetToUnload);
+        string resName = path + "_" + typeof(T).Name;
+        //判断是否存在对应资源
+        if(resDic.ContainsKey(resName))
+        {
+            ResInfo<T> resInfo = resDic[resName] as ResInfo<T>;
+            //资源已经加载结束 
+            if(resInfo.asset != null)
+            {
+                //从字典移除
+                resDic.Remove(resName);
+                //通过api 卸载资源
+                Resources.UnloadAsset(resInfo.asset as UnityEngine.Object);
+            }
+            else//资源正在异步加载中
+            {
+                //MonoMgr.Instance.StopCoroutine(resInfo.coroutine);
+                //resDic.Remove(resName);
+                //为了保险起见 一定要让资源移除了
+                //改变表示 待删除
+                resInfo.isDel = true;
+            }
+        }
+    }
+
+    //实现非泛型加载时调用的卸载方法
+    public void UnloadAsset(string path, Type type)
+    {
+        string resName = path + "_" + type.Name;
+        //判断是否存在对应资源
+        if (resDic.ContainsKey(resName))
+        {
+            ResInfo<UnityEngine.Object> resInfo = resDic[resName] as ResInfo<UnityEngine.Object>;
+            //资源已经加载结束 
+            if (resInfo.asset != null)
+            {
+                //从字典移除
+                resDic.Remove(resName);
+                //通过api 卸载资源
+                Resources.UnloadAsset(resInfo.asset);
+            }
+            else//资源正在异步加载中
+            {
+                //MonoMgr.Instance.StopCoroutine(resInfo.coroutine);
+                //resDic.Remove(resName);
+                //为了保险起见 一定要让资源移除了
+                //改变表示 待删除
+                resInfo.isDel = true;
+            }
+        }
     }
 
     /// <summary>
