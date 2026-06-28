@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MonoMgr : SingleonAutoMono<MonoMgr>
+public class MonoMgr : SingletonAutoMono<MonoMgr>
 {
     private event UnityAction updateEvent;
     private event UnityAction fixedUpdateEvent;
