@@ -84,88 +84,88 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         }
     }
 
-    /// <summary>
-    /// 泛型资源同步加载
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="abName"></param>
-    /// <param name="resName"></param>
-    /// <returns></returns>
-    public T LoadRes<T>(string abName, string resName) where T:Object
-    {
-        //加载依赖包
-        LoadDependencies(abName);
-        //加载目标包
-        if ( !abDic.ContainsKey(abName) )
-        {
-            AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
-            abDic.Add(abName, ab);
-        }
+    ///// <summary>
+    ///// 泛型资源同步加载
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="abName"></param>
+    ///// <param name="resName"></param>
+    ///// <returns></returns>
+    //public T LoadRes<T>(string abName, string resName) where T:Object
+    //{
+    //    //加载依赖包
+    //    LoadDependencies(abName);
+    //    //加载目标包
+    //    if ( !abDic.ContainsKey(abName) )
+    //    {
+    //        AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
+    //        abDic.Add(abName, ab);
+    //    }
 
-        //得到加载出来的资源
-        T obj = abDic[abName].LoadAsset<T>(resName);
-        //如果是GameObject 因为GameObject 100%都是需要实例化的
-        //所以我们直接实例化
-        if (obj is GameObject)
-            return Instantiate(obj);
-        else
-            return obj;
-    }
+    //    //得到加载出来的资源
+    //    T obj = abDic[abName].LoadAsset<T>(resName);
+    //    //如果是GameObject 因为GameObject 100%都是需要实例化的
+    //    //所以我们直接实例化
+    //    if (obj is GameObject)
+    //        return Instantiate(obj);
+    //    else
+    //        return obj;
+    //}
 
-    /// <summary>
-    /// Type同步加载指定资源
-    /// </summary>
-    /// <param name="abName"></param>
-    /// <param name="resName"></param>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public Object LoadRes(string abName, string resName, System.Type type) 
-    {
-        //加载依赖包
-        LoadDependencies(abName);
-        //加载目标包
-        if (!abDic.ContainsKey(abName))
-        {
-            AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
-            abDic.Add(abName, ab);
-        }
+    ///// <summary>
+    ///// Type同步加载指定资源
+    ///// </summary>
+    ///// <param name="abName"></param>
+    ///// <param name="resName"></param>
+    ///// <param name="type"></param>
+    ///// <returns></returns>
+    //public Object LoadRes(string abName, string resName, System.Type type) 
+    //{
+    //    //加载依赖包
+    //    LoadDependencies(abName);
+    //    //加载目标包
+    //    if (!abDic.ContainsKey(abName))
+    //    {
+    //        AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
+    //        abDic.Add(abName, ab);
+    //    }
 
-        //得到加载出来的资源
-        Object obj = abDic[abName].LoadAsset(resName, type);
-        //如果是GameObject 因为GameObject 100%都是需要实例化的
-        //所以我们直接实例化
-        if (obj is GameObject)
-            return Instantiate(obj);
-        else
-            return obj;
-    }
+    //    //得到加载出来的资源
+    //    Object obj = abDic[abName].LoadAsset(resName, type);
+    //    //如果是GameObject 因为GameObject 100%都是需要实例化的
+    //    //所以我们直接实例化
+    //    if (obj is GameObject)
+    //        return Instantiate(obj);
+    //    else
+    //        return obj;
+    //}
 
-    /// <summary>
-    /// 名字 同步加载指定资源
-    /// </summary>
-    /// <param name="abName"></param>
-    /// <param name="resName"></param>
-    /// <returns></returns>
-    public Object LoadRes(string abName, string resName)
-    {
-        //加载依赖包
-        LoadDependencies(abName);
-        //加载目标包
-        if (!abDic.ContainsKey(abName))
-        {
-            AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
-            abDic.Add(abName, ab);
-        }
+    ///// <summary>
+    ///// 名字 同步加载指定资源
+    ///// </summary>
+    ///// <param name="abName"></param>
+    ///// <param name="resName"></param>
+    ///// <returns></returns>
+    //public Object LoadRes(string abName, string resName)
+    //{
+    //    //加载依赖包
+    //    LoadDependencies(abName);
+    //    //加载目标包
+    //    if (!abDic.ContainsKey(abName))
+    //    {
+    //        AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
+    //        abDic.Add(abName, ab);
+    //    }
 
-        //得到加载出来的资源
-        Object obj = abDic[abName].LoadAsset(resName);
-        //如果是GameObject 因为GameObject 100%都是需要实例化的
-        //所以我们直接实例化
-        if (obj is GameObject)
-            return Instantiate(obj);
-        else
-            return obj;
-    }
+    //    //得到加载出来的资源
+    //    Object obj = abDic[abName].LoadAsset(resName);
+    //    //如果是GameObject 因为GameObject 100%都是需要实例化的
+    //    //所以我们直接实例化
+    //    if (obj is GameObject)
+    //        return Instantiate(obj);
+    //    else
+    //        return obj;
+    //}
 
     /// <summary>
     /// 泛型异步加载资源
@@ -174,12 +174,12 @@ public class ABMgr : SingletonAutoMono<ABMgr>
     /// <param name="abName"></param>
     /// <param name="resName"></param>
     /// <param name="callBack"></param>
-    public void LoadResAsync<T>(string abName, string resName, UnityAction<T> callBack) where T:Object
+    public void LoadResAsync<T>(string abName, string resName, UnityAction<T> callBack, bool isSync = false) where T:Object
     {
-        StartCoroutine(ReallyLoadResAsync<T>(abName, resName, callBack));
+        StartCoroutine(ReallyLoadResAsync<T>(abName, resName, callBack, isSync));
     }
     //正儿八经的 协程函数
-    private IEnumerator ReallyLoadResAsync<T>(string abName, string resName, UnityAction<T> callBack) where T : Object
+    private IEnumerator ReallyLoadResAsync<T>(string abName, string resName, UnityAction<T> callBack, bool isSync) where T : Object
     {
         //加载主包
         LoadMainAB();
@@ -187,14 +187,25 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         string[] strs = manifest.GetAllDependencies(abName);
         for (int i = 0; i < strs.Length; i++)
         {
+            //还没有加载过该AB包
             if (!abDic.ContainsKey(strs[i]))
             {
-                //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
-                abDic.Add(strs[i], null);
-                AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + strs[i]);
-                yield return req;
-                //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
-                abDic[strs[i]] = req.assetBundle;
+                //同步加载
+                if(isSync)
+                {
+                    AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + strs[i]);
+                    abDic.Add(strs[i], ab);
+                }
+                //异步加载
+                else
+                {
+                    //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
+                    abDic.Add(strs[i], null);
+                    AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + strs[i]);
+                    yield return req;
+                    //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
+                    abDic[strs[i]] = req.assetBundle;
+                }
             }
             //就证明 字典中已经记录了一个AB包相关信息了
             else
@@ -211,12 +222,21 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         //加载目标包
         if (!abDic.ContainsKey(abName))
         {
-            //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
-            abDic.Add(abName, null);
-            AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + abName);
-            yield return req;
-            //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
-            abDic[abName] = req.assetBundle;
+            //同步加载
+            if (isSync)
+            {
+                AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
+                abDic.Add(abName, ab);
+            }
+            else
+            {
+                //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
+                abDic.Add(abName, null);
+                AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + abName);
+                yield return req;
+                //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
+                abDic[abName] = req.assetBundle;
+            }
         }
         else
         {
@@ -229,11 +249,21 @@ public class ABMgr : SingletonAutoMono<ABMgr>
             }
         }
 
+        //同步加载AB包中的资源
+        if(isSync)
+        {
+            //即使是同步加载 也需要使用回调函数传给外部进行使用
+            T res = abDic[abName].LoadAsset<T>(resName);
+            callBack(res);
+        }
         //异步加载包中资源
-        AssetBundleRequest abq = abDic[abName].LoadAssetAsync<T>(resName);
-        yield return abq;
+        else
+        {
+            AssetBundleRequest abq = abDic[abName].LoadAssetAsync<T>(resName);
+            yield return abq;
 
-        callBack(abq.asset as T);
+            callBack(abq.asset as T);
+        }
     }
 
     /// <summary>
@@ -243,12 +273,12 @@ public class ABMgr : SingletonAutoMono<ABMgr>
     /// <param name="resName"></param>
     /// <param name="type"></param>
     /// <param name="callBack"></param>
-    public void LoadResAsync(string abName, string resName, System.Type type, UnityAction<Object> callBack)
+    public void LoadResAsync(string abName, string resName, System.Type type, UnityAction<Object> callBack, bool isSync = false)
     {
-        StartCoroutine(ReallyLoadResAsync(abName, resName, type, callBack));
+        StartCoroutine(ReallyLoadResAsync(abName, resName, type, callBack, isSync));
     }
 
-    private IEnumerator ReallyLoadResAsync(string abName, string resName, System.Type type, UnityAction<Object> callBack)
+    private IEnumerator ReallyLoadResAsync(string abName, string resName, System.Type type, UnityAction<Object> callBack, bool isSync)
     {
         //加载主包
         LoadMainAB();
@@ -256,14 +286,25 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         string[] strs = manifest.GetAllDependencies(abName);
         for (int i = 0; i < strs.Length; i++)
         {
+            //还没有加载过该AB包
             if (!abDic.ContainsKey(strs[i]))
             {
-                //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
-                abDic.Add(strs[i], null);
-                AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + strs[i]);
-                yield return req;
-                //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
-                abDic[strs[i]] = req.assetBundle;
+                //同步加载
+                if (isSync)
+                {
+                    AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + strs[i]);
+                    abDic.Add(strs[i], ab);
+                }
+                //异步加载
+                else
+                {
+                    //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
+                    abDic.Add(strs[i], null);
+                    AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + strs[i]);
+                    yield return req;
+                    //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
+                    abDic[strs[i]] = req.assetBundle;
+                }
             }
             //就证明 字典中已经记录了一个AB包相关信息了
             else
@@ -280,12 +321,21 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         //加载目标包
         if (!abDic.ContainsKey(abName))
         {
-            //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
-            abDic.Add(abName, null);
-            AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + abName);
-            yield return req;
-            //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
-            abDic[abName] = req.assetBundle;
+            //同步加载
+            if (isSync)
+            {
+                AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
+                abDic.Add(abName, ab);
+            }
+            else
+            {
+                //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
+                abDic.Add(abName, null);
+                AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + abName);
+                yield return req;
+                //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
+                abDic[abName] = req.assetBundle;
+            }
         }
         else
         {
@@ -297,11 +347,21 @@ public class ABMgr : SingletonAutoMono<ABMgr>
                 yield return 0;
             }
         }
-        //异步加载包中资源
-        AssetBundleRequest abq = abDic[abName].LoadAssetAsync(resName, type);
-        yield return abq;
 
-        callBack(abq.asset);
+        if(isSync)
+        {
+            Object res = abDic[abName].LoadAsset(resName, type);
+            callBack(res);
+        }
+        else
+        {
+            //异步加载包中资源
+            AssetBundleRequest abq = abDic[abName].LoadAssetAsync(resName, type);
+            yield return abq;
+
+            callBack(abq.asset);
+        }
+        
     }
 
     /// <summary>
@@ -310,12 +370,12 @@ public class ABMgr : SingletonAutoMono<ABMgr>
     /// <param name="abName"></param>
     /// <param name="resName"></param>
     /// <param name="callBack"></param>
-    public void LoadResAsync(string abName, string resName, UnityAction<Object> callBack)
+    public void LoadResAsync(string abName, string resName, UnityAction<Object> callBack, bool isSync = false)
     {
-        StartCoroutine(ReallyLoadResAsync(abName, resName, callBack));
+        StartCoroutine(ReallyLoadResAsync(abName, resName, callBack, isSync));
     }
 
-    private IEnumerator ReallyLoadResAsync(string abName, string resName, UnityAction<Object> callBack)
+    private IEnumerator ReallyLoadResAsync(string abName, string resName, UnityAction<Object> callBack, bool isSync)
     {
         //加载主包
         LoadMainAB();
@@ -323,14 +383,25 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         string[] strs = manifest.GetAllDependencies(abName);
         for (int i = 0; i < strs.Length; i++)
         {
+            //还没有加载过该AB包
             if (!abDic.ContainsKey(strs[i]))
             {
-                //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
-                abDic.Add(strs[i], null);
-                AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + strs[i]);
-                yield return req;
-                //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
-                abDic[strs[i]] = req.assetBundle;
+                //同步加载
+                if (isSync)
+                {
+                    AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + strs[i]);
+                    abDic.Add(strs[i], ab);
+                }
+                //异步加载
+                else
+                {
+                    //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
+                    abDic.Add(strs[i], null);
+                    AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + strs[i]);
+                    yield return req;
+                    //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
+                    abDic[strs[i]] = req.assetBundle;
+                }
             }
             //就证明 字典中已经记录了一个AB包相关信息了
             else
@@ -347,12 +418,21 @@ public class ABMgr : SingletonAutoMono<ABMgr>
         //加载目标包
         if (!abDic.ContainsKey(abName))
         {
-            //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
-            abDic.Add(abName, null);
-            AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + abName);
-            yield return req;
-            //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
-            abDic[abName] = req.assetBundle;
+            //同步加载
+            if (isSync)
+            {
+                AssetBundle ab = AssetBundle.LoadFromFile(PathUrl + abName);
+                abDic.Add(abName, ab);
+            }
+            else
+            {
+                //一开始异步加载 就记录 如果此时的记录中的值 是null 那证明这个ab包正在被异步加载
+                abDic.Add(abName, null);
+                AssetBundleCreateRequest req = AssetBundle.LoadFromFileAsync(PathUrl + abName);
+                yield return req;
+                //异步加载结束后 再替换之前的null  这时 不为null 就证明加载结束了
+                abDic[abName] = req.assetBundle;
+            }
         }
         else
         {
@@ -364,11 +444,22 @@ public class ABMgr : SingletonAutoMono<ABMgr>
                 yield return 0;
             }
         }
-        //异步加载包中资源
-        AssetBundleRequest abq = abDic[abName].LoadAssetAsync(resName);
-        yield return abq;
 
-        callBack(abq.asset);
+        if(isSync)
+        {
+            Object obj = abDic[abName].LoadAsset(resName);
+            callBack(obj);
+        }
+        else
+        {
+
+            //异步加载包中资源
+            AssetBundleRequest abq = abDic[abName].LoadAssetAsync(resName);
+            yield return abq;
+
+            callBack(abq.asset);
+        }
+
     }
 
     //卸载AB包的方法
