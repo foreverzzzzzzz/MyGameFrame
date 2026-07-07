@@ -145,6 +145,10 @@ public class UIMgr : BaseManager<UIMgr>
             }
             else//已经加载结束
             {
+                //如果是失活状态 直接激活面板 就可以显示了
+                if (!panelInfo.panel.gameObject.activeSelf)
+                    panelInfo.panel.gameObject.SetActive(true);
+
                 //如果要显示面板 会执行一次面板的默认显示逻辑
                 panelInfo.panel.ShowMe();
                 //如果存在回调 直接返回出去即可
@@ -194,7 +198,7 @@ public class UIMgr : BaseManager<UIMgr>
     /// 隐藏面板
     /// </summary>
     /// <typeparam name="T">面板类型</typeparam>
-    public void HidePanel<T>() where T : BasePanel
+    public void HidePanel<T>(bool isDestory = false) where T : BasePanel
     {
         string panelName = typeof(T).Name;
         if (panelDic.ContainsKey(panelName))
@@ -213,10 +217,17 @@ public class UIMgr : BaseManager<UIMgr>
             {
                 //执行默认的隐藏面板想要做的事情
                 panelInfo.panel.HideMe();
-                //销毁面板
-                GameObject.Destroy(panelInfo.panel.gameObject);
-                //从容器中移除
-                panelDic.Remove(panelName);
+                //如果要销毁  就直接将面板销毁从字典中移除记录
+                if (isDestory)
+                {
+                    //销毁面板
+                    GameObject.Destroy(panelInfo.panel.gameObject);
+                    //从容器中移除
+                    panelDic.Remove(panelName);
+                }
+                //如果不销毁 那么就只是失活 下次再显示的时候 直接复用即可
+                else
+                    panelInfo.panel.gameObject.SetActive(false);
             }
         }
     }
