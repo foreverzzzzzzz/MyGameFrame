@@ -9,6 +9,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         print(UIMgr.Instance.GetLayerFather(E_UILayer.Bottom).name);
+        UIMgr.Instance.ShowPanel<BeginPanel>();
     }
 
 }
